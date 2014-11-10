@@ -1,8 +1,7 @@
 <?php
 
 ###
-# @name		Database Module
-# @author		Tobias Reich
+# @name			Database Module
 # @copyright	2014 by Tobias Reich
 ###
 
@@ -22,7 +21,10 @@ class Database extends Module {
 
 		# Avoid sql injection on older MySQL versions by using GBK
 		if ($database->server_version<50500) $database->set_charset('GBK');
-		else $database->set_charset("utf8");
+		else $database->set_charset('utf8');
+
+		# Set unicode
+		$database->query('SET NAMES utf8;');
 
 		# Check database
 		if (!$database->select_db($name))
@@ -41,6 +43,7 @@ class Database extends Module {
 
 		# Check dependencies
 		Module::dependencies(isset($database, $dbName));
+		if (!isset($version)) return true;
 
 		# List of updates
 		$updates = array(
@@ -50,13 +53,14 @@ class Database extends Module {
 			'020500', #2.5
 			'020505', #2.5.5
 			'020601', #2.6.1
-			'020602' #2.6.2
+			'020602', #2.6.2
+			'020700' #2.7.0
 		);
 
 		# For each update
 		foreach ($updates as $update) {
 
-			if (isset($version)&&$update<=$version) continue;
+			if ($update<=$version) continue;
 
 			# Load update
 			include(__DIR__ . '/../database/update_' . $update . '.php');

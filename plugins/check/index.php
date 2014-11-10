@@ -68,11 +68,12 @@ if (!isset($settings['imagick'])||$settings['imagick']=='')				$error .= ('Error
 if (!isset($settings['checkForUpdates'])||($settings['checkForUpdates']!='0'&&$settings['checkForUpdates']!='1')) $error .= ('Error 410: No or wrong property for checkForUpdates in database' . PHP_EOL);
 
 # Permissions
-if (hasPermissions(LYCHEE_UPLOADS_BIG)===false)			$error .= ('Error 500: Wrong permissions for \'uploads/big\' (777 required)' . PHP_EOL);
-if (hasPermissions(LYCHEE_UPLOADS_THUMB)===false)		$error .= ('Error 501: Wrong permissions for \'uploads/thumb\' (777 required)' . PHP_EOL);
-if (hasPermissions(LYCHEE_UPLOADS_IMPORT)===false)		$error .= ('Error 502: Wrong permissions for \'uploads/import\' (777 required)' . PHP_EOL);
-if (hasPermissions(LYCHEE_UPLOADS)===false)				$error .= ('Error 503: Wrong permissions for \'uploads/\' (777 required)' . PHP_EOL);
-if (hasPermissions(LYCHEE_DATA)===false)				$error .= ('Error 504: Wrong permissions for \'data/\' (777 required)' . PHP_EOL);
+if (hasPermissions(LYCHEE_UPLOADS_BIG)===false)			$error .= ('Error 500: \'uploads/big\' missing or not readable and writable (777 required)' . PHP_EOL);
+if (hasPermissions(LYCHEE_UPLOADS_MEDIUM)===false)		$error .= ('Error 500: \'uploads/medium\' missing or not readable and writable (777 required)' . PHP_EOL);
+if (hasPermissions(LYCHEE_UPLOADS_THUMB)===false)		$error .= ('Error 501: \'uploads/thumb\' missing or not readable and writable (777 required)' . PHP_EOL);
+if (hasPermissions(LYCHEE_UPLOADS_IMPORT)===false)		$error .= ('Error 502: \'uploads/import\' missing or not readable and writable (777 required)' . PHP_EOL);
+if (hasPermissions(LYCHEE_UPLOADS)===false)				$error .= ('Error 503: \'uploads/\' missing or not readable and writable (777 required)' . PHP_EOL);
+if (hasPermissions(LYCHEE_DATA)===false)				$error .= ('Error 504: \'data/\' missing or not readable and writable (777 required)' . PHP_EOL);
 
 # Check dropboxKey
 if (!$settings['dropboxKey']) echo('Warning: Dropbox import not working. No property for dropboxKey.' . PHP_EOL);
@@ -99,7 +100,8 @@ $imagick = extension_loaded('imagick');
 if ($imagick===false) $imagick = '-';
 
 if ($imagick===true) $imagickVersion = @Imagick::getVersion();
-if (!isset($imagickVersion)||$imagickVersion==='') $imagickVersion = '-';
+if (!isset($imagickVersion, $imagickVersion['versionNumber'])||$imagickVersion==='') $imagickVersion = '-';
+else $imagickVersion = $imagickVersion['versionNumber'];
 
 $gdVersion = gd_info();
 
@@ -111,7 +113,7 @@ echo('PHP Version:     ' . floatval(phpversion()) . PHP_EOL);
 echo('MySQL Version:   ' . $database->server_version . PHP_EOL);
 echo('Imagick:         ' . $imagick . PHP_EOL);
 echo('Imagick Active:  ' . $settings['imagick'] . PHP_EOL);
-echo('Imagick Version: ' . $imagickVersion['versionNumber'] . PHP_EOL);
+echo('Imagick Version: ' . $imagickVersion . PHP_EOL);
 echo('GD Version:      ' . $gdVersion['GD Version'] . PHP_EOL);
 
 ?>
